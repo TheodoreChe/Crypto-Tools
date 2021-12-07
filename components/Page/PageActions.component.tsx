@@ -1,11 +1,8 @@
 import { FC, ReactNode } from 'react'
+import styled from 'styled-components'
 
-type PageActionsProps = {
-  children: ReactNode
-}
-
-const PageActions: FC<PageActionsProps> = ({ children }) => {
-  return <>{children}</>
-}
+const PageActions = styled.div`
+  display: flex;
+`
 
 export default PageActions

@@ -1,11 +1,8 @@
 import { ReactNode, FC } from 'react'
+import styled from 'styled-components'
 
-type PageMainProps = {
-  children: ReactNode
-}
-
-const PageMain: FC<PageMainProps> = ({ children }) => {
-  return <>{children}</>
-}
+const PageMain = styled.div`
+  display: flex;
+`
 
 export default PageMain

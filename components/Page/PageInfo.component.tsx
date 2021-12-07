@@ -1,11 +1,8 @@
 import { FC, ReactNode } from 'react'
+import styled from 'styled-components'
 
-type PageInfoProps = {
-  children: ReactNode
-}
-
-const PageInfo: FC<PageInfoProps> = ({ children }) => {
-  return <>{children}</>
-}
+const PageInfo = styled.div`
+  display: flex;
+`
 
 export default PageInfo
