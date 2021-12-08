@@ -1,8 +1,10 @@
 import { FC, ReactNode } from 'react'
 import styled from 'styled-components'
 
-const PageInfo = styled.div`
+const GridRow = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  width: 100%;
 `
 
-export default PageInfo
+export default GridRow
