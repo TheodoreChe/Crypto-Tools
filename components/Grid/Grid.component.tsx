@@ -4,11 +4,11 @@ import { device } from '@/constants/breakpoints'
 import GridRow from './GridRow.component'
 import GridColumn from './GridColumn.component'
 
-interface PageProps {
+interface GridProps {
   children: ReactNode
 }
 
-interface GridInterface extends FC<PageProps> {
+interface GridInterface extends FC<GridProps> {
   Row: typeof GridRow
   Column: typeof GridColumn
 }

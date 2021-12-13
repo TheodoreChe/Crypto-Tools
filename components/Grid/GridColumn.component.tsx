@@ -27,6 +27,8 @@ const getWidthByMedia = ({ xl, lg, md, sm }: GridColumnProps) =>
     )
 
 const GridColumn = styled.div<GridColumnProps>`
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   flex-shrink: 0;
   width: ${({ xs }) => (100 / 12) * Number(xs ?? 12)}%;
