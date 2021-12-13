@@ -2,7 +2,7 @@ import { FC, ReactNode } from 'react'
 import Head from 'next/head'
 import { DEFAULT_DESCRIPTION, DEFAULT_FOOTER, DEFAULT_TITLE } from './page.constants'
 
-type PageProps = {
+interface PageProps {
   children: ReactNode
   title?: string
   description?: string
