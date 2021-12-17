@@ -31,18 +31,34 @@ const OptionComponent = styled.div`
   margin-left: var(--gap);
 `
 
+const Button = styled.button`
+  ${actionElement};
+  margin-top: -1px;
+  background-color: transparent;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+`
+
 const Structure: FC<StructureProps> = ({ properties }) => {
   return (
-    <ContainerComponent>
-      {properties?.map((property, index) => (
-        <ItemComponent key={property.name} index={index}>
-          <PropertyComponent>{property.name}</PropertyComponent>
-          {property.options?.map((option) => (
-            <OptionComponent key={option.name}>{option.name}</OptionComponent>
+      <>
+        <ContainerComponent>
+          {properties?.map((property, index) => (
+              <ItemComponent key={property.name} index={index}>
+                <PropertyComponent>{property.name}</PropertyComponent>
+                {property.options?.map((option) => (
+                    <OptionComponent key={option.name}>{option.name}</OptionComponent>
+                ))}
+              </ItemComponent>
           ))}
-        </ItemComponent>
-      ))}
-    </ContainerComponent>
+        </ContainerComponent>
+        <Button>
+          Delete All
+        </Button>
+      </>
+
   )
 }
 
