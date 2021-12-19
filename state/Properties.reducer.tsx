@@ -9,8 +9,8 @@ export const INITAIAL_STATE = {
   properties: [],
 }
 
-const findByName = (collection: Property[] | Option[] | undefined, name: string) =>
-  collection?.find((item) => item.name === name)
+const findByName = (collection: { name: string }[] | undefined, name: string) =>
+  collection?.find((item: Property | Option) => item.name === name)
 
 const getPropertyWithOption = (property: Property, newOption: Option) => {
   const isNewOption = !findByName(property.options, newOption.name)
@@ -39,14 +39,14 @@ export function propertiesReducer(state: PropertiesState = INITAIAL_STATE, actio
   switch (action.type) {
     case PropertiesActions.ADD_OPTION: {
       const { properties } = state
-      const { propertyName, optionName } = action.data ?? {}
+      const { propertyName, optionName, picture } = action.data ?? {}
       const isNewProperty = !findByName(properties, propertyName)
       let newProperties: Property[]
 
       if (isNewProperty) {
         newProperties = [
           ...properties,
-          getPropertyWithOption({ id: uuidv4(), name: propertyName }, { name: optionName }),
+          getPropertyWithOption({ id: uuidv4(), name: propertyName }, { id: uuidv4(), name: optionName, picture }),
         ]
       } else {
         newProperties = properties.map((property) => {

@@ -3,6 +3,7 @@ import {Dispatch, ReactNode } from 'react'
 export type Option = {
   id?: string
   name: string
+  picture?: any
 }
 
 export type Property = {

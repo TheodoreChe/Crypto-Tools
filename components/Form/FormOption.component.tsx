@@ -22,18 +22,18 @@ const FormOption = () => {
       <Input
         type="text"
         label="Property"
-        placeholder="Enter a new or use an existing property name e.g. Kind of Hat"
+        placeholder="Enter a new or use an existing property name"
         register={register}
         name="propertyName"
       />
       <Input
         type="text"
         label="Option"
-        placeholder="Enter option name e.g. Baseball Cap"
+        placeholder="Enter option name"
         register={register}
         name="optionName"
       />
-      <Input type="file" label="Image" register={register} name="image" />
+      <Input type="file" label="Picture" register={register} name="picture" />
 
       <Submit type="submit" value="Add Option" />
     </form>
