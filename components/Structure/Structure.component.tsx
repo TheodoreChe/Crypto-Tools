@@ -8,13 +8,14 @@ type StructureProps = {
 }
 
 const ContainerComponent = styled.div`
+  height: 0;
   flex-grow: 1;
-  flex-shrink: 0;
-  border-bottom: var(--border);
-  border-left: var(--border);
-  border-right: var(--border);
-  padding: 1rem var(--gap);
+  flex-shrink: 1;
+  overflow: auto;
+  margin-top: -1px;
+  border: var(--border);
   border-radius: var(--radius);
+  padding: 1rem var(--gap);
 `
 
 const ItemComponent = styled.div<{ index: number }>`
@@ -41,24 +42,38 @@ const Button = styled.button`
   }
 `
 
-const Structure: FC<StructureProps> = ({ properties }) => {
-  return (
-      <>
-        <ContainerComponent>
-          {properties?.map((property, index) => (
-              <ItemComponent key={property.name} index={index}>
-                <PropertyComponent>{property.name}</PropertyComponent>
-                {property.options?.map((option) => (
-                    <OptionComponent key={option.name}>{option.name}</OptionComponent>
-                ))}
-              </ItemComponent>
-          ))}
-        </ContainerComponent>
-        <Button>
-          Delete All
-        </Button>
-      </>
+const Number = styled.div`
+  ${actionElement};
+  margin-top: -1px;
+`
 
+const Structure: FC<StructureProps> = ({ properties }) => {
+  const count =
+    properties &&
+    properties.length &&
+    properties.reduce((acc, cur) => {
+      const optionsNumber = cur.options?.length
+      if (optionsNumber && optionsNumber > 0) {
+        return acc * optionsNumber
+      }
+      return acc
+    }, 1)
+
+  return (
+    <>
+      <ContainerComponent>
+        {properties?.map((property, index) => (
+          <ItemComponent key={property.name} index={index}>
+            <PropertyComponent>{property.name}</PropertyComponent>
+            {property.options?.map((option) => (
+              <OptionComponent key={option.name}>{option.name}</OptionComponent>
+            ))}
+          </ItemComponent>
+        ))}
+      </ContainerComponent>
+      <Number>The size of the collection: {count}</Number>
+      <Button>Delete All</Button>
+    </>
   )
 }
 

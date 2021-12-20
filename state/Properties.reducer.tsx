@@ -39,14 +39,14 @@ export function propertiesReducer(state: PropertiesState = INITAIAL_STATE, actio
   switch (action.type) {
     case PropertiesActions.ADD_OPTION: {
       const { properties } = state
-      const { propertyName, optionName, picture } = action.data ?? {}
+      const { propertyName, optionName, fileList } = action.data ?? {}
       const isNewProperty = !findByName(properties, propertyName)
       let newProperties: Property[]
 
       if (isNewProperty) {
         newProperties = [
           ...properties,
-          getPropertyWithOption({ id: uuidv4(), name: propertyName }, { id: uuidv4(), name: optionName, picture }),
+          getPropertyWithOption({ id: uuidv4(), name: propertyName }, { id: uuidv4(), name: optionName, picture: fileList?.[0] }),
         ]
       } else {
         newProperties = properties.map((property) => {

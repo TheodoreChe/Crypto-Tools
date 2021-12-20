@@ -6,7 +6,8 @@ import Grid from '@/components/Grid'
 import styled from 'styled-components'
 import Header from '@/components/Header'
 import Structure from '@/components/Structure'
-import Form from '@/components/Form'
+import Preview from '@/components/Preview'
+import AddOption from '@/features/AddOption'
 import { usePropertiesContext } from '../state/Properties'
 
 const Container = styled.div`
@@ -27,12 +28,13 @@ const Home: NextPage = () => {
               <Header black center border>
                 <h1>Crypto Tools</h1>
               </Header>
+              <Preview properties={properties} />
             </Grid.Column>
             <Grid.Column lg={5} xl={6}>
               <Header>
                 <h2>Create New Option</h2>
               </Header>
-              <Form />
+              <AddOption />
             </Grid.Column>
             <Grid.Column lg={4} xl={3}>
               <Header border>

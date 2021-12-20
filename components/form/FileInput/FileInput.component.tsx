@@ -1,4 +1,4 @@
-import React, { FC, InputHTMLAttributes } from 'react'
+import React, { ChangeEvent, ChangeEventHandler, FC, InputHTMLAttributes, useState } from 'react'
 import styled from 'styled-components'
 import { UseFormRegister } from 'react-hook-form/dist/types/form'
 import { actionElement } from '@/constants/styles'
@@ -30,17 +30,12 @@ const FileComponent = styled.div`
 const InputComponent = styled.input`
   ${actionElement};
   display: block;
-  width: 100%;
   margin: 0.375rem 0 1.25rem;
-  ${({ type }) =>
-    type === 'file' &&
-    `
-    position: absolute;
-    top: 0;
-    width: 0;
-    opacity: 0;
-    pointer-events: none;
-  `}
+  position: absolute;
+  top: 0;
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
   &:focus {
     outline: none;
     border-color: var(--blue);
@@ -50,14 +45,21 @@ const InputComponent = styled.input`
   }
 `
 
-const Input: FC<InputProps> = ({ label, name, register, ...rest }) => {
+const FileInput: FC<InputProps> = ({ label, name, register, ...rest }) => {
+  const [fileName, setFileName] = useState<string | undefined>(undefined)
+  const onChange: ChangeEventHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.currentTarget.files?.[0]
+    if (file) {
+      setFileName(file.name)
+    }
+  }
   return (
     <LabelComponent>
       {label}
-      <InputComponent {...register(name)} {...rest} />
-      {rest.type === 'file' && <FileComponent />}
+      <InputComponent {...register(name)} {...rest} onChange={onChange} />
+      <FileComponent>{fileName}</FileComponent>
     </LabelComponent>
   )
 }
 
-export default Input
+export default FileInput
