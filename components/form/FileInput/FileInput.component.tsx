@@ -2,50 +2,50 @@ import React, { ChangeEvent, ChangeEventHandler, FC, InputHTMLAttributes, useSta
 import styled from 'styled-components'
 import { UseFormRegister } from 'react-hook-form/dist/types/form'
 import { actionElement } from '@/constants/styles'
+import ErrorMessage from '@/components/ErrorMessage'
+import LabelComponent from '@/components/form/Label'
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   name: string
   label?: string
   register: UseFormRegister<Record<string, any>>
+  validations?: Record<string, any>
+  errors?: Record<string, any>
 }
-
-const LabelComponent = styled.label`
-  display: block;
-  position: relative;
-  font-size: 0.875rem;
-  font-weight: bold;
-`
 
 const FileComponent = styled.div`
   border: thin dashed var(--black);
   height: 3.75rem;
-  margin: 0.375rem 0 1.25rem;
+  margin: 0.375rem 0 0.75rem;
   border-radius: var(--radius);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   &:hover {
     background-color: rgba(255, 255, 255, 0.4);
   }
 `
 
 const InputComponent = styled.input`
-  ${actionElement};
-  display: block;
-  margin: 0.375rem 0 1.25rem;
   position: absolute;
   top: 0;
   width: 0;
   opacity: 0;
   pointer-events: none;
   &:focus {
-    outline: none;
-    border-color: var(--blue);
     + ${FileComponent} {
       border-color: var(--blue);
     }
   }
 `
 
-const FileInput: FC<InputProps> = ({ label, name, register, ...rest }) => {
+const ErrorComponent = styled.span`
+  font-weight: 300;
+  color: red;
+`
+
+const FileInput: FC<InputProps> = ({ label, name, register, validations, errors, ...rest }) => {
   const [fileName, setFileName] = useState<string | undefined>(undefined)
   const onChange: ChangeEventHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.currentTarget.files?.[0]
@@ -56,8 +56,9 @@ const FileInput: FC<InputProps> = ({ label, name, register, ...rest }) => {
   return (
     <LabelComponent>
       {label}
-      <InputComponent {...register(name)} {...rest} onChange={onChange} />
+      <InputComponent {...register(name, validations)} {...rest} onChange={onChange} />
       <FileComponent>{fileName}</FileComponent>
+      <ErrorMessage name={name} errors={errors} />
     </LabelComponent>
   )
 }
