@@ -1,10 +1,8 @@
-export type Image = string | Buffer
-
 export type Option = {
   id?: string
   name: string
   propertyName?: string
-  picture?: Image
+  fileName?: string
 }
 
 export type Property = {
@@ -15,6 +13,7 @@ export type Property = {
 
 export type CollectionState = {
   name?: string | undefined
+  preview?: string | undefined
   properties: Property[]
 }
 

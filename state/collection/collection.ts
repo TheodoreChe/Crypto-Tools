@@ -1,11 +1,29 @@
 import { v4 as uuidv4 } from 'uuid'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import localForage from 'localforage'
 import { findByName, getPropertyWithOption } from './collection.utils'
 import { AddCollectionData, AddOptionData, CollectionState, Property } from './collection.types'
 
 const initialCollectionState: CollectionState = {
   properties: [],
 }
+
+export const addOption = createAsyncThunk('collection/addOptionStatus', async (payload: AddOptionData, thunkAPI) => {
+  try {
+    const { propertyName, optionName, fileList } = payload ?? {}
+    const fileName = `${propertyName}__${optionName}`
+    await localForage.setItem(fileName, new Blob(fileList, { type: 'image/png' }))
+
+    return {
+      id: uuidv4(),
+      propertyName,
+      name: optionName,
+      fileName,
+    }
+  } catch (e) {
+    console.log(e)
+  }
+})
 
 export const collectionSlice = createSlice({
   name: 'collection',
@@ -15,34 +33,42 @@ export const collectionSlice = createSlice({
       state.name = payload.collectionName
     },
 
+    addPreview: (state, { payload }: PayloadAction<string>) => {
+      state.preview = payload
+    },
+
     deleteCollection: (state) => {
       state.name = undefined
       state.properties = []
+      localForage.clear()
     },
+  },
 
-    addOption: (state, { payload }: PayloadAction<AddOptionData>) => {
+  extraReducers: (builder) => {
+    builder.addCase(addOption.fulfilled, (state, { payload }) => {
+      if (payload == null) {
+        return
+      }
+
       const { properties } = state
-      const { propertyName, optionName, fileList } = payload ?? {}
-      const isNewProperty = !findByName(properties, propertyName)
+
+      const isNewProperty = !findByName(properties, payload.propertyName)
       let newProperties: Property[]
 
-      const picture = URL.createObjectURL(new Blob(fileList, { type: 'image/png' }))
-      const newOption = { id: uuidv4(), name: optionName, picture }
-
       if (isNewProperty) {
-        newProperties = [...properties, getPropertyWithOption({ id: uuidv4(), name: propertyName }, newOption)]
+        newProperties = [...properties, getPropertyWithOption({ id: uuidv4(), name: payload.propertyName }, payload)]
       } else {
         newProperties = properties.map((property) => {
-          if (property.name === propertyName) {
-            return getPropertyWithOption(property, newOption)
+          if (property.name === payload.propertyName) {
+            return getPropertyWithOption(property, payload)
           }
           return property
         })
       }
 
       state.properties = newProperties
-    },
+    })
   },
 })
 
-export const { addOption, addCollection, deleteCollection } = collectionSlice.actions
+export const { addCollection, deleteCollection, addPreview } = collectionSlice.actions
