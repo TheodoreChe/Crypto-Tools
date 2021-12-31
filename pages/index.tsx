@@ -1,52 +1,21 @@
+import React from 'react'
 import { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
 import Page from '@/components/Page'
-import Grid from '@/components/Grid'
-import styled from 'styled-components'
-import Header from '@/components/Header'
-import Structure from '@/components/Structure'
-import Preview from '@/components/Preview'
-import AddOption from '@/features/AddOption'
-import { usePropertiesContext } from '../state/Properties'
+import NewCollection from '@/features/NewCollection'
+import { useRouter } from 'next/router'
+import { useAppSelector } from '@/state/hooks'
+import { getCollectionName } from '@/state/collection'
 
-const Container = styled.div`
-  height: 100vh;
-  width: 100vw;
-  padding: 60px;
-`
+const HomePage: NextPage = () => {
+  const router = useRouter()
+  console.log('router.pathname', router.pathname)
+  // const collectionName = useAppSelector(getCollectionName)
 
-const Home: NextPage = () => {
-  const { state } = usePropertiesContext()
-  const { properties } = state
   return (
     <Page>
-      <Container>
-        <Grid>
-          <Grid.Row>
-            <Grid.Column lg={3}>
-              <Header black center border>
-                <h1>Crypto Tools</h1>
-              </Header>
-              <Preview properties={properties} />
-            </Grid.Column>
-            <Grid.Column lg={5} xl={6}>
-              <Header>
-                <h2>Create New Option</h2>
-              </Header>
-              <AddOption />
-            </Grid.Column>
-            <Grid.Column lg={4} xl={3}>
-              <Header border>
-                <h2>Structure</h2>
-              </Header>
-              <Structure properties={properties} />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Container>
+      <NewCollection />
     </Page>
   )
 }
 
-export default Home
+export default HomePage
