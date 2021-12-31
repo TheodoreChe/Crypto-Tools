@@ -14,6 +14,7 @@ export type Property = {
 export type CollectionState = {
   name?: string | undefined
   preview?: string | undefined
+  previewMeta?: string[] | undefined
   properties: Property[]
 }
 

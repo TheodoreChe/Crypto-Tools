@@ -37,10 +37,13 @@ export const collectionSlice = createSlice({
       state.preview = payload
     },
 
+    addPreviewMeta: (state, { payload }: PayloadAction<string[]>) => {
+      state.previewMeta = payload
+    },
+
     deleteCollection: (state) => {
-      state.name = undefined
-      state.properties = []
       localForage.clear()
+      return initialCollectionState
     },
   },
 
@@ -71,4 +74,4 @@ export const collectionSlice = createSlice({
   },
 })
 
-export const { addCollection, deleteCollection, addPreview } = collectionSlice.actions
+export const { addCollection, deleteCollection, addPreview, addPreviewMeta } = collectionSlice.actions

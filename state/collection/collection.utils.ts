@@ -26,18 +26,24 @@ export const getPropertyWithOption = (property: Property, newOption: Option) => 
   }
 }
 
-export const generatePropertiesCartesianProduct = (properties: Property[]): Option[][] =>
-  properties.reduce(
-    (acc: Option[][], { options = [], name: propertyName }) =>
-      acc.flatMap((current) => options.map((item) => [current, { ...item, propertyName }].flat())),
-    [],
-  )
+export const sliceArrayByChunks = (array: Array<any>, chunkSize = 100) =>
+  array.reduce((acc, item, index) => {
+    const chunkIndex = Math.floor(index / chunkSize)
 
-export const getRandomFileNameList = (properties: Property[] = []) =>
+    if (!acc[chunkIndex]) {
+      acc[chunkIndex] = []
+    }
+
+    acc[chunkIndex].push(item)
+
+    return acc
+  }, [])
+
+export const getRandomOptionList = (properties: Property[] = []) =>
   properties
     .map((property) => {
       if (!property.options) return
       const randomIndex = Math.floor(Math.random() * property.options.length)
-      return property.options[randomIndex].fileName
+      return property.options[randomIndex]
     })
-    .filter(Boolean) as string[]
+    .filter(Boolean) as Option[]
