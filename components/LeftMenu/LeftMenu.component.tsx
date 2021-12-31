@@ -5,15 +5,18 @@ import localForage from 'localforage'
 import Button from '@/components/form/Button'
 import {
   addPreview,
+  addPreviewMeta,
   getCollectionName,
   getCollectionPreview,
+  getCollectionPreviewMeta,
   getIsPropertiesEmpty,
   getProperties,
-  getRandomFileNameList,
+  getRandomOptionList,
 } from '@/state/collection'
 import { useAppDispatch, useAppSelector } from '@/state/hooks'
 import LinkButton from '@/components/form/LinkButton'
 import labels from '@/constants/labels'
+import mergeOptions from '../../lib/mergeOptions'
 
 const LeftMenuComponent = styled.div<{ progress: boolean }>`
   opacity: ${({ progress }) => (progress ? '0' : '1')};
@@ -34,6 +37,15 @@ const PreviewComponent = styled.div`
   border-radius: var(--radius);
 `
 
+const MetaComponent = styled.div`
+  margin-top: -1px;
+  padding: 1rem;
+  border: var(--border);
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  line-height: 1.2rem;
+`
+
 const ImgComponent = styled.img`
   max-width: calc(100% - var(--gap));
 `
@@ -45,13 +57,16 @@ const LeftMenu: FC = () => {
   const isPropertiesEmpty = useAppSelector(getIsPropertiesEmpty)
   const collectionName = useAppSelector(getCollectionName)
   const collectionPreview = useAppSelector(getCollectionPreview)
+  const collectionPreviewMeta = useAppSelector(getCollectionPreviewMeta)
 
   const generateExampleHandle = useCallback(async () => {
-    const fileNameList = getRandomFileNameList(properties)
+    const optionList = getRandomOptionList(properties)
 
-    const blobList = (await Promise.all(fileNameList.map((fileName) => localForage.getItem<Blob>(fileName)))) as Blob[]
-    const urlList = blobList.map(URL.createObjectURL)
-    mergeImages(urlList).then((image) => dispatch(addPreview(image)))
+    // Create Meta
+    const previewMeta = optionList.map(({ propertyName, name }) => `${propertyName}: ${name}`)
+
+    mergeOptions(optionList).then((image) => dispatch(addPreview(image)))
+    dispatch(addPreviewMeta(previewMeta))
   }, [properties])
 
   return (
@@ -66,6 +81,13 @@ const LeftMenu: FC = () => {
       <LinkButton href="/help">{labels.help_title}</LinkButton>
 
       <PreviewComponent>{collectionPreview && <ImgComponent src={collectionPreview} alt="Preview" />}</PreviewComponent>
+      {collectionPreviewMeta && (
+        <MetaComponent>
+          {collectionPreviewMeta.map((meta) => (
+            <div key={meta}>{meta}</div>
+          ))}
+        </MetaComponent>
+      )}
 
       <Button disabled={isPropertiesEmpty} onClick={generateExampleHandle}>
         Generate Example
