@@ -5,11 +5,12 @@ import Input from '@/components/form/BaseInput'
 import Submit from '@/components/form/SubmitButton'
 import Header from '@/components/Header'
 import { useAppDispatch, useAppSelector } from '@/state/hooks'
+import { useRouter } from 'next/router'
 import { addCollection, AddCollectionData, deleteCollection, getCollectionName } from '@/state/collection'
 import Button from '@/components/form/Button'
-import { layoutName, setLayout } from '@/state/layout'
+import labels from '@/constants/labels'
 
-const WelcomeScreenComponent = styled.div`
+const NewCollectionComponent = styled.div`
   padding: var(--gap);
 `
 
@@ -22,7 +23,7 @@ const MessageComponent = styled.div`
   margin-bottom: var(--gap);
 `
 
-const WelcomeScreen = () => {
+const NewCollection = () => {
   const {
     register,
     handleSubmit,
@@ -31,7 +32,7 @@ const WelcomeScreen = () => {
   } = useForm()
   const dispatch = useAppDispatch()
   const collectionName = useAppSelector(getCollectionName)
-
+  const router = useRouter()
   const resetForm = useCallback(() => {
     reset()
   }, [reset])
@@ -40,7 +41,7 @@ const WelcomeScreen = () => {
     if (data.collectionName != '') {
       dispatch(addCollection(data))
       resetForm()
-      dispatch(setLayout(layoutName.ADD_OPTION))
+      router.push('/add_option')
     }
   }
 
@@ -49,25 +50,27 @@ const WelcomeScreen = () => {
   }
 
   const continueHandle = () => {
-    dispatch(setLayout(layoutName.ADD_OPTION))
+    router.push('/add_option')
   }
 
   if (collectionName) {
     return (
       <>
         <Header>
-          <h2>New Collection</h2>
+          <h2>{labels.new_collection_title}</h2>
         </Header>
-        <WelcomeScreenComponent>
+        <NewCollectionComponent>
           <MessageComponent>
             Do you want to delete <b>{collectionName}</b>?
           </MessageComponent>
 
           <ButtonsComponent>
-            <Button onClick={newCollectionHandle}>Yes, Crete New Collection</Button>
+            <Button onClick={newCollectionHandle}>
+              Yes, create <b>New Collection</b>
+            </Button>
             <Button onClick={continueHandle}>No, Continue work</Button>
           </ButtonsComponent>
-        </WelcomeScreenComponent>
+        </NewCollectionComponent>
       </>
     )
   }
@@ -75,9 +78,9 @@ const WelcomeScreen = () => {
   return (
     <>
       <Header>
-        <h2>New Collection</h2>
+        <h2>{labels.new_collection_title}</h2>
       </Header>
-      <WelcomeScreenComponent>
+      <NewCollectionComponent>
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
           <Input
             errors={errors}
@@ -91,9 +94,9 @@ const WelcomeScreen = () => {
 
           <Submit type="submit" value="Create Collection" />
         </form>
-      </WelcomeScreenComponent>
+      </NewCollectionComponent>
     </>
   )
 }
 
-export default WelcomeScreen
+export default NewCollection
