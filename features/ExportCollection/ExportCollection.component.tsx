@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import mergeImages from 'merge-images'
 import localForage from 'localforage'
 import { saveAs } from 'file-saver'
-import JSZip from 'JSZip'
+import JSZip from 'jszip'
 import Header from '@/components/Header'
 import {
   getCollectionName,
