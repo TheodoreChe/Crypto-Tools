@@ -1,44 +1,80 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import Input from '@/components/form/BaseInput'
 import File from '@/components/form/FileInput'
 import Submit from '@/components/form/SubmitButton'
-import { usePropertiesContext } from '@/state/Properties'
-import { PropertiesActions } from '@/state/Properties.reducer'
+import Header from '@/components/Header'
+import { useAppDispatch, useAppSelector } from '@/state/hooks'
+import { addOption, AddOptionData, getCollectionName } from '@/state/collection'
+import labels from '@/constants/labels'
 
-const AddOptionComponent = styled.div`
+const AddOptionComponent = styled.div<{ disabled?: boolean }>`
   padding: var(--gap);
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      pointer-events: none;
+      opacity: 0.5;
+    `};
 `
 
 const AddOption = () => {
-  const { register, handleSubmit } = useForm()
-  const { dispatch } = usePropertiesContext()
-  const onSubmit = (data: any) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
+  const collectionName = useAppSelector(getCollectionName)
+  const dispatch = useAppDispatch()
+  const onSubmit = (data: AddOptionData) => {
     if (data.propertyName != '') {
-      dispatch({
-        type: PropertiesActions.ADD_OPTION,
-        data,
-      })
+      dispatch(addOption(data))
     }
   }
 
-  return (
-    <AddOptionComponent>
-      <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-        <Input
-          type="text"
-          label="Property"
-          placeholder="Enter a new or use an existing property name"
-          register={register}
-          name="propertyName"
-        />
-        <Input type="text" label="Option" placeholder="Enter option name" register={register} name="optionName" />
-        <File type="file" label="Picture" register={register} name="fileList" />
+  const isDisabled = collectionName == null
 
-        <Submit type="submit" value="Add Option" />
-      </form>
-    </AddOptionComponent>
+  return (
+    <>
+      <Header>
+        <h2>{labels.add_option_title}</h2>
+      </Header>
+      <AddOptionComponent disabled={isDisabled}>
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+          <Input
+            errors={errors}
+            label="Property"
+            name="propertyName"
+            placeholder="Enter a new or use an existing property name"
+            register={register}
+            type="text"
+            validations={{ required: 'Please enter property name.' }}
+          />
+          <Input
+            errors={errors}
+            label="Option"
+            name="optionName"
+            placeholder="Enter option name"
+            register={register}
+            type="text"
+            validations={{ required: 'Please enter option name.' }}
+          />
+          <File
+            errors={errors}
+            type="file"
+            label="Picture"
+            register={register}
+            name="fileList"
+            validations={{ required: 'Please app picture.' }}
+            accept="image/png"
+          />
+
+          <Submit type="submit" value="Add Option" />
+        </form>
+      </AddOptionComponent>
+    </>
   )
 }
 
