@@ -7,3 +7,13 @@ export const actionElement = css`
   font-size: 1rem;
   line-height: 1.75rem;
 `
+
+export const buttonElement = css`
+  ${actionElement};
+  margin-top: -1px;
+  background-color: transparent;
+  text-align: center;
+  user-select: none;
+  font-size: 1rem;
+  font-family: var(--fonts);
+`
