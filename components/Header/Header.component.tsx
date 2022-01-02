@@ -13,6 +13,11 @@ const Header = styled.div<Props>`
   height: 6rem;
   padding: 0 var(--gap);
   border-radius: var(--radius);
+  & > * {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   ${({ black }) =>
     black &&
