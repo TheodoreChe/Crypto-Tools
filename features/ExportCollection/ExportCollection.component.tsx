@@ -1,5 +1,9 @@
 import React, { FC, useState } from 'react'
 import styled from 'styled-components'
+import mergeImages from 'merge-images'
+import localForage from 'localforage'
+import { saveAs } from 'file-saver'
+import JSZip from 'JSZip'
 import Header from '@/components/Header'
 import {
   getCollectionName,
@@ -10,10 +14,6 @@ import {
 } from '@/state/collection'
 import { useAppSelector } from '@/state/hooks'
 import { actionElement } from '@/constants/styles'
-import mergeImages from 'merge-images'
-import localForage from 'localforage'
-import { saveAs } from 'file-saver'
-import JSZip from 'JSZip'
 import mergeOptions from '../../lib/mergeOptions'
 
 const ExportCollectionComponent = styled.div<{ disabled?: boolean }>`
