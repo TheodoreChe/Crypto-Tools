@@ -1,11 +1,10 @@
 import { FC } from 'react'
 import styled from 'styled-components'
-import { Property } from '@/state/Properties.types'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { actionElement } from '@/constants/styles'
-
-type StructureProps = {
-  properties?: Property[]
-}
+import { useAppSelector } from '@/state/hooks'
+import { getProperties } from '@/state/collection'
 
 const ContainerComponent = styled.div`
   height: 0;
@@ -15,7 +14,7 @@ const ContainerComponent = styled.div`
   margin-top: -1px;
   border: var(--border);
   border-radius: var(--radius);
-  padding: 1rem var(--gap);
+  padding: calc(var(--gap) / 2);
 `
 
 const ItemComponent = styled.div<{ index: number }>`
@@ -23,13 +22,21 @@ const ItemComponent = styled.div<{ index: number }>`
 `
 
 const PropertyComponent = styled.div`
-  ${actionElement}
+  ${actionElement};
+  background: var(--black);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `
 
 const OptionComponent = styled.div`
   ${actionElement};
   margin-top: -1px;
   margin-left: var(--gap);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `
 
 const Button = styled.button`
@@ -47,7 +54,8 @@ const Number = styled.div`
   margin-top: -1px;
 `
 
-const Structure: FC<StructureProps> = ({ properties }) => {
+const Structure: FC = () => {
+  const properties = useAppSelector(getProperties)
   const count =
     properties &&
     properties.length &&
@@ -64,15 +72,20 @@ const Structure: FC<StructureProps> = ({ properties }) => {
       <ContainerComponent>
         {properties?.map((property, index) => (
           <ItemComponent key={property.name} index={index}>
-            <PropertyComponent>{property.name}</PropertyComponent>
+            <PropertyComponent>
+              {property.name} <FontAwesomeIcon icon={faTimes} color="white" />
+            </PropertyComponent>
             {property.options?.map((option) => (
-              <OptionComponent key={option.name}>{option.name}</OptionComponent>
+              <OptionComponent key={option.name}>
+                {option.name}
+                <FontAwesomeIcon icon={faTimes} />
+              </OptionComponent>
             ))}
           </ItemComponent>
         ))}
       </ContainerComponent>
-      <Number>The size of the collection: {count}</Number>
       <Button>Delete All</Button>
+      <Number>The size of the collection: {count}</Number>
     </>
   )
 }
