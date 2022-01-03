@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { actionElement } from '@/constants/styles'
-import { useAppSelector } from '@/state/hooks'
-import { getProperties } from '@/state/collection'
+import { useAppDispatch, useAppSelector } from '@/state/hooks'
+import { deleteOptionByName, deleteProperties, deletePropertyByName, getProperties } from '@/state/collection'
 
 const ContainerComponent = styled.div`
   height: 0;
@@ -54,7 +54,18 @@ const Number = styled.div`
   margin-top: -1px;
 `
 
+const DeletePropertyComponent = styled.div`
+  cursor: pointer;
+  padding: 0 0.5rem;
+  border-radius: 1rem;
+`
+
+const DeleteOptionComponent = styled.div`
+  cursor: pointer;
+`
+
 const Structure: FC = () => {
+  const dispatch = useAppDispatch()
   const properties = useAppSelector(getProperties)
   const count =
     properties &&
@@ -67,24 +78,43 @@ const Structure: FC = () => {
       return acc
     }, 1)
 
+  const deleteAllHandle = () => {
+    dispatch(deleteProperties())
+  }
+
+  const deletePropertyHandle = (payload: { propertyName: string }) => () => {
+    dispatch(deletePropertyByName(payload))
+  }
+
+  const deleteOptionHandle = (payload: { propertyName: string; optionName: string }) => () => {
+    dispatch(deleteOptionByName(payload))
+  }
+
   return (
     <>
       <ContainerComponent>
         {properties?.map((property, index) => (
           <ItemComponent key={property.name} index={index}>
             <PropertyComponent>
-              {property.name} <FontAwesomeIcon icon={faTimes} color="white" />
+              {property.name}{' '}
+              <DeletePropertyComponent onClick={deletePropertyHandle({ propertyName: property.name })}>
+                <FontAwesomeIcon icon={faTimes} color="white" />
+              </DeletePropertyComponent>
             </PropertyComponent>
             {property.options?.map((option) => (
               <OptionComponent key={option.name}>
                 {option.name}
-                <FontAwesomeIcon icon={faTimes} />
+                <DeleteOptionComponent
+                  onClick={deleteOptionHandle({ propertyName: property.name, optionName: option.name })}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </DeleteOptionComponent>
               </OptionComponent>
             ))}
           </ItemComponent>
         ))}
       </ContainerComponent>
-      <Button>Delete All</Button>
+      <Button onClick={deleteAllHandle}>Delete All</Button>
       <Number>The size of the collection: {count}</Number>
     </>
   )

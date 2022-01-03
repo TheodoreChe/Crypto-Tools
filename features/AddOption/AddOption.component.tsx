@@ -47,7 +47,7 @@ const AddOption = () => {
             errors={errors}
             label="Property"
             name="propertyName"
-            placeholder="Enter a new or use an existing property name"
+            placeholder="e.g. Background"
             register={register}
             type="text"
             validations={{ required: 'Please enter property name.' }}
@@ -56,7 +56,7 @@ const AddOption = () => {
             errors={errors}
             label="Option"
             name="optionName"
-            placeholder="Enter option name"
+            placeholder="e.g. Red"
             register={register}
             type="text"
             validations={{ required: 'Please enter option name.' }}

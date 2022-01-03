@@ -41,6 +41,27 @@ export const collectionSlice = createSlice({
       state.previewMeta = payload
     },
 
+    deleteProperties: (state) => {
+      localForage.clear()
+      state.properties = []
+    },
+
+    deletePropertyByName: (state, { payload }: PayloadAction<{ propertyName: string }>) => {
+      state.properties = state.properties.filter(({ name }) => name !== payload.propertyName)
+    },
+
+    deleteOptionByName: (state, { payload }: PayloadAction<{ propertyName: string; optionName: string }>) => {
+      state.properties = state.properties.map((property) => {
+        if (property.name === payload.propertyName && property.options) {
+          return {
+            ...property,
+            options: property.options.filter(({ name }) => name !== payload.optionName),
+          }
+        }
+        return property
+      })
+    },
+
     deleteCollection: (state) => {
       localForage.clear()
       return initialCollectionState
@@ -74,4 +95,12 @@ export const collectionSlice = createSlice({
   },
 })
 
-export const { addCollection, deleteCollection, addPreview, addPreviewMeta } = collectionSlice.actions
+export const {
+  addCollection,
+  addPreview,
+  addPreviewMeta,
+  deleteCollection,
+  deleteOptionByName,
+  deleteProperties,
+  deletePropertyByName,
+} = collectionSlice.actions

@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from '@/state/hooks'
 import LinkButton from '@/components/form/LinkButton'
 import labels from '@/constants/labels'
 import mergeOptions from '../../lib/mergeOptions'
+import Preview from './Preview.component'
 
 const LeftMenuComponent = styled.div<{ progress: boolean }>`
   opacity: ${({ progress }) => (progress ? '0' : '1')};
@@ -25,39 +26,12 @@ const LeftMenuComponent = styled.div<{ progress: boolean }>`
   flex-grow: 1;
 `
 
-const PreviewComponent = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 0;
-  flex-grow: 1;
-  flex-shrink: 1;
-  margin-top: -1px;
-  border: var(--border);
-  border-radius: var(--radius);
-`
-
-const MetaComponent = styled.div`
-  margin-top: -1px;
-  padding: 1rem;
-  border: var(--border);
-  border-radius: var(--radius);
-  font-size: 0.75rem;
-  line-height: 1.2rem;
-`
-
-const ImgComponent = styled.img`
-  max-width: calc(100% - var(--gap));
-`
-
 const LeftMenu: FC = () => {
   const [progress, setProgress] = useState<boolean>(false)
   const dispatch = useAppDispatch()
   const properties = useAppSelector(getProperties)
   const isPropertiesEmpty = useAppSelector(getIsPropertiesEmpty)
   const collectionName = useAppSelector(getCollectionName)
-  const collectionPreview = useAppSelector(getCollectionPreview)
-  const collectionPreviewMeta = useAppSelector(getCollectionPreviewMeta)
 
   const generateExampleHandle = useCallback(async () => {
     const optionList = getRandomOptionList(properties)
@@ -80,14 +54,7 @@ const LeftMenu: FC = () => {
       </LinkButton>
       <LinkButton href="/help">{labels.help_title}</LinkButton>
 
-      <PreviewComponent>{collectionPreview && <ImgComponent src={collectionPreview} alt="Preview" />}</PreviewComponent>
-      {collectionPreviewMeta && (
-        <MetaComponent>
-          {collectionPreviewMeta.map((meta) => (
-            <div key={meta}>{meta}</div>
-          ))}
-        </MetaComponent>
-      )}
+      <Preview />
 
       <Button disabled={isPropertiesEmpty} onClick={generateExampleHandle}>
         Generate Example

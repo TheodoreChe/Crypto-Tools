@@ -39,8 +39,8 @@ const NewCollection = () => {
 
   const onSubmit = (data: AddCollectionData) => {
     if (data.collectionName != '') {
-      dispatch(addCollection(data))
       resetForm()
+      dispatch(addCollection(data))
       router.push('/add_option')
     }
   }
