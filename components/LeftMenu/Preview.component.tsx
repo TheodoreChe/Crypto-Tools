@@ -73,7 +73,7 @@ const Preview: FC = () => {
     )
   }
 
-  return null
+  return <Wrapper />
 }
 
 export default Preview

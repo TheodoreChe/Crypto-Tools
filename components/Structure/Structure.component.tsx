@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import styled from 'styled-components'
+import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faTimes, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { actionElement } from '@/constants/styles'
 import { useAppDispatch, useAppSelector } from '@/state/hooks'
 import { deleteOptionByName, deleteProperties, deletePropertyByName, getProperties } from '@/state/collection'
@@ -54,14 +55,22 @@ const Number = styled.div`
   margin-top: -1px;
 `
 
-const DeletePropertyComponent = styled.div`
+const IconComponent = styled.div`
   cursor: pointer;
-  padding: 0 0.5rem;
+  height: 1.7rem;
+  width: 1.7rem;
   border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  &:hover {
+    opacity: 1;
+  }
 `
 
-const DeleteOptionComponent = styled.div`
-  cursor: pointer;
+const IconsComponent = styled.div`
+  display: flex;
 `
 
 const Structure: FC = () => {
@@ -97,18 +106,26 @@ const Structure: FC = () => {
           <ItemComponent key={property.name} index={index}>
             <PropertyComponent>
               {property.name}{' '}
-              <DeletePropertyComponent onClick={deletePropertyHandle({ propertyName: property.name })}>
+              <IconComponent onClick={deletePropertyHandle({ propertyName: property.name })}>
                 <FontAwesomeIcon icon={faTimes} color="white" />
-              </DeletePropertyComponent>
+              </IconComponent>
             </PropertyComponent>
             {property.options?.map((option) => (
               <OptionComponent key={option.name}>
                 {option.name}
-                <DeleteOptionComponent
-                  onClick={deleteOptionHandle({ propertyName: property.name, optionName: option.name })}
-                >
-                  <FontAwesomeIcon icon={faTimes} />
-                </DeleteOptionComponent>
+                <IconsComponent>
+                  <Link href={{ pathname: '/edit_option', query: { id: option.id } }}>
+                    <a>
+                      <IconComponent>
+                        <FontAwesomeIcon icon={faEdit} />
+                      </IconComponent>
+                    </a>
+                  </Link>
+
+                  <IconComponent onClick={deleteOptionHandle({ propertyName: property.name, optionName: option.name })}>
+                    <FontAwesomeIcon icon={faTimes} />
+                  </IconComponent>
+                </IconsComponent>
               </OptionComponent>
             ))}
           </ItemComponent>

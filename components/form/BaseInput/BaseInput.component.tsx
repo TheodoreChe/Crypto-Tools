@@ -8,7 +8,7 @@ import LabelComponent from '@/components/form/Label'
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   name: string
   label?: string
-  register: UseFormRegister<Record<string, any>>
+  register: UseFormRegister<any>
   validations?: Record<string, any>
   errors?: Record<string, any>
 }

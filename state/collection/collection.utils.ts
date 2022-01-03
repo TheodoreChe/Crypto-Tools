@@ -3,8 +3,13 @@ import { Option, Property } from './collection.types'
 export const findByName = (collection: { name: string }[] | undefined, name: string) =>
   collection?.find((item: Property | Option) => item.name === name)
 
+export const findById = (collection: { name: string }[] | undefined, id?: string) =>
+  collection?.find((item: Property | Option) => item.id === id)
+
 export const getPropertyWithOption = (property: Property, newOption: Option) => {
-  const isNewOption = !findByName(property.options, newOption.name)
+  const isNewOption = !findById(property.options, newOption.id)
+  console.log('isNewOption', isNewOption)
+  console.log('newOption', newOption)
   let newOptions: Option[]
   if (isNewOption) {
     newOptions = [...(property.options ?? []), newOption]

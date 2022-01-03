@@ -24,6 +24,13 @@ export const getProperties: Selector<RootState, Property[]> = createSelector(
   (state) => state.properties,
 )
 
+export const getOptions: Selector<RootState, Option[]> = createSelector(getProperties, (properties) =>
+  properties.map((property) => property.options || []).flat(),
+)
+
+export const getOptionById = (id?: string): Selector<RootState, Option | undefined> =>
+  createSelector(getOptions, (options) => (id ? options.find((option) => option.id === id) : undefined))
+
 export const getPropertiesCartesianProduct: Selector<RootState, Option[][]> = createSelector(
   getProperties,
   (properties) =>

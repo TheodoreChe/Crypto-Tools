@@ -24,6 +24,10 @@ export type AddOptionData = {
   fileList: any
 }
 
+export type EditOptionData = AddOptionData & {
+  id: string
+}
+
 export type AddCollectionData = {
   collectionName: string
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import styled, { css } from 'styled-components'
 import Input from '@/components/form/BaseInput'
@@ -6,8 +6,13 @@ import File from '@/components/form/FileInput'
 import Submit from '@/components/form/SubmitButton'
 import Header from '@/components/Header'
 import { useAppDispatch, useAppSelector } from '@/state/hooks'
-import { addOption, AddOptionData, getCollectionName } from '@/state/collection'
+import { addOption, editOption, AddOptionData, getCollectionName, getOptionById } from '@/state/collection'
 import labels from '@/constants/labels'
+import { useRouter } from 'next/router'
+
+type OptionProps = {
+  id?: string | undefined
+}
 
 const AddOptionComponent = styled.div<{ disabled?: boolean }>`
   padding: var(--gap);
@@ -20,17 +25,45 @@ const AddOptionComponent = styled.div<{ disabled?: boolean }>`
     `};
 `
 
-const AddOption = () => {
+const Option: FC<OptionProps> = ({ id }) => {
+  const router = useRouter()
+  const collectionName = useAppSelector(getCollectionName)
+  const option = useAppSelector(getOptionById(id))
+  const values = option
+    ? {
+        propertyName: option.propertyName,
+        optionName: option.name,
+      }
+    : undefined
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm()
-  const collectionName = useAppSelector(getCollectionName)
+
+  useEffect(() => {
+    reset(values)
+  }, [reset, values?.propertyName, values?.optionName])
+
+  const resetForm = useCallback(
+    (newValues?: any) => {
+      reset(newValues)
+    },
+    [reset],
+  )
+
   const dispatch = useAppDispatch()
+
   const onSubmit = (data: AddOptionData) => {
-    if (data.propertyName != '') {
+    if (id) {
+      router.push('/add_option')
+      dispatch(editOption({ ...data, id }))
+      resetForm()
+    } else if (data.propertyName != '') {
       dispatch(addOption(data))
+      resetForm()
     }
   }
 
@@ -39,7 +72,7 @@ const AddOption = () => {
   return (
     <>
       <Header>
-        <h2>{labels.add_option_title}</h2>
+        <h2>{Boolean(id) ? labels.edit_option_title : labels.add_option_title}</h2>
       </Header>
       <AddOptionComponent disabled={isDisabled}>
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -49,6 +82,7 @@ const AddOption = () => {
             name="propertyName"
             placeholder="e.g. Background"
             register={register}
+            disabled={Boolean(id)}
             type="text"
             validations={{ required: 'Please enter property name.' }}
           />
@@ -67,15 +101,15 @@ const AddOption = () => {
             label="Picture"
             register={register}
             name="fileList"
-            validations={{ required: 'Please app picture.' }}
+            validations={{ required: !id && 'Please app picture.' }}
             accept="image/png"
           />
 
-          <Submit type="submit" value="Add Option" />
+          <Submit type="submit" value={Boolean(id) ? labels.edit_option_title : labels.add_option_title} />
         </form>
       </AddOptionComponent>
     </>
   )
 }
 
-export default AddOption
+export default Option
