@@ -2,10 +2,18 @@ import { FC } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faTimesCircle, faEdit } from '@fortawesome/free-regular-svg-icons'
 import { actionElement } from '@/constants/styles'
+import Button from '@/components/form/Button'
 import { useAppDispatch, useAppSelector } from '@/state/hooks'
-import { deleteOptionByName, deleteProperties, deletePropertyByName, getProperties } from '@/state/collection'
+import {
+  deleteOptionByName,
+  deleteProperties,
+  deletePropertyByName,
+  getCollectionName,
+  getProperties,
+} from '@/state/collection'
+import Header from '@/components/Header'
 
 const ContainerComponent = styled.div`
   height: 0;
@@ -40,16 +48,6 @@ const OptionComponent = styled.div`
   justify-content: space-between;
 `
 
-const Button = styled.button`
-  ${actionElement};
-  margin-top: -1px;
-  background-color: transparent;
-  cursor: pointer;
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-  }
-`
-
 const Number = styled.div`
   ${actionElement};
   margin-top: -1px;
@@ -59,7 +57,6 @@ const IconComponent = styled.div`
   cursor: pointer;
   height: 1.7rem;
   width: 1.7rem;
-  border-radius: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,8 +70,19 @@ const IconsComponent = styled.div`
   display: flex;
 `
 
+const ButtonsComponent = styled.div`
+  display: flex;
+  ${Button} {
+    flex: 1;
+  }
+  ${Button}:not(:first-child) {
+    margin-left: -1px;
+  }
+`
+
 const Structure: FC = () => {
   const dispatch = useAppDispatch()
+  const collectionName = useAppSelector(getCollectionName)
   const properties = useAppSelector(getProperties)
   const count =
     properties &&
@@ -101,13 +109,23 @@ const Structure: FC = () => {
 
   return (
     <>
+      <Header border>
+        <h2>{collectionName ?? 'Collection Name'}</h2>
+      </Header>
+      <ButtonsComponent>
+        <Button disabled>Undo</Button>
+        <Button disabled>Redo</Button>
+        <Button disabled={properties?.length === 0} onClick={deleteAllHandle}>
+          Delete
+        </Button>
+      </ButtonsComponent>
       <ContainerComponent>
         {properties?.map((property, index) => (
           <ItemComponent key={property.name} index={index}>
             <PropertyComponent>
               {property.name}{' '}
               <IconComponent onClick={deletePropertyHandle({ propertyName: property.name })}>
-                <FontAwesomeIcon icon={faTimes} color="white" />
+                <FontAwesomeIcon icon={faTimesCircle} color="white" />
               </IconComponent>
             </PropertyComponent>
             {property.options?.map((option) => (
@@ -123,7 +141,7 @@ const Structure: FC = () => {
                   </Link>
 
                   <IconComponent onClick={deleteOptionHandle({ propertyName: property.name, optionName: option.name })}>
-                    <FontAwesomeIcon icon={faTimes} />
+                    <FontAwesomeIcon icon={faTimesCircle} />
                   </IconComponent>
                 </IconsComponent>
               </OptionComponent>
@@ -131,7 +149,6 @@ const Structure: FC = () => {
           </ItemComponent>
         ))}
       </ContainerComponent>
-      <Button onClick={deleteAllHandle}>Delete All</Button>
       <Number>The size of the collection: {count}</Number>
     </>
   )

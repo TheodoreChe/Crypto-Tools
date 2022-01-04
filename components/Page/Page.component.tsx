@@ -30,7 +30,6 @@ const Page: FC<PageProps> = ({
   description = DEFAULT_DESCRIPTION,
   footer = DEFAULT_FOOTER,
 }) => {
-  const collectionName = useAppSelector(getCollectionName)
   return (
     <>
       <Head>
@@ -51,9 +50,6 @@ const Page: FC<PageProps> = ({
                 {children}
               </Grid.Column>
               <Grid.Column lg={4} xl={3}>
-                <Header border>
-                  <h2>{collectionName ?? 'Structure'}</h2>
-                </Header>
                 <Structure />
               </Grid.Column>
             </Grid.Row>

@@ -17,6 +17,10 @@ const NewCollectionComponent = styled.div`
 const ButtonsComponent = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  > * {
+    width: calc(50% - 0.5rem);
+  }
 `
 
 const MessageComponent = styled.div`
@@ -39,8 +43,8 @@ const NewCollection = () => {
 
   const onSubmit = (data: AddCollectionData) => {
     if (data.collectionName != '') {
-      resetForm()
       router.push('/add_option')
+      resetForm()
       dispatch(addCollection(data))
     }
   }

@@ -1,8 +1,8 @@
 import React, { FC, useCallback, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import styled, { css } from 'styled-components'
 import Input from '@/components/form/BaseInput'
-import File from '@/components/form/FileInput'
+import FileInput from '@/components/form/FileInput'
 import Submit from '@/components/form/SubmitButton'
 import Header from '@/components/Header'
 import { useAppDispatch, useAppSelector } from '@/state/hooks'
@@ -36,22 +36,17 @@ const Option: FC<OptionProps> = ({ id }) => {
       }
     : undefined
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm()
+  const methods = useForm()
 
   useEffect(() => {
-    reset(values)
-  }, [reset, values?.propertyName, values?.optionName])
+    methods.reset(values)
+  }, [methods.reset, values?.propertyName, values?.optionName])
 
   const resetForm = useCallback(
     (newValues?: any) => {
-      reset(newValues)
+      methods.reset(newValues)
     },
-    [reset],
+    [methods.reset],
   )
 
   const dispatch = useAppDispatch()
@@ -75,38 +70,37 @@ const Option: FC<OptionProps> = ({ id }) => {
         <h2>{Boolean(id) ? labels.edit_option_title : labels.add_option_title}</h2>
       </Header>
       <AddOptionComponent disabled={isDisabled}>
-        <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-          <Input
-            errors={errors}
-            label="Property"
-            name="propertyName"
-            placeholder="e.g. Background"
-            register={register}
-            disabled={Boolean(id)}
-            type="text"
-            validations={{ required: 'Please enter property name.' }}
-          />
-          <Input
-            errors={errors}
-            label="Option"
-            name="optionName"
-            placeholder="e.g. Red"
-            register={register}
-            type="text"
-            validations={{ required: 'Please enter option name.' }}
-          />
-          <File
-            errors={errors}
-            type="file"
-            label="Picture"
-            register={register}
-            name="fileList"
-            validations={{ required: !id && 'Please app picture.' }}
-            accept="image/png"
-          />
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)} autoComplete="off">
+            <Input
+              errors={methods.formState.errors}
+              label="Property"
+              name="propertyName"
+              placeholder="e.g. Background"
+              register={methods.register}
+              disabled={Boolean(id)}
+              type="text"
+              validations={{ required: 'Please enter property name.' }}
+            />
+            <Input
+              errors={methods.formState.errors}
+              label="Option"
+              name="optionName"
+              placeholder="e.g. Red"
+              register={methods.register}
+              type="text"
+              validations={{ required: 'Please enter option name.' }}
+            />
+            <FileInput
+              label="Picture"
+              name="fileList"
+              validations={{ required: !id && 'Please app picture.' }}
+              accept="image/png"
+            />
 
-          <Submit type="submit" value={Boolean(id) ? labels.edit_option_title : labels.add_option_title} />
-        </form>
+            <Submit type="submit" value={Boolean(id) ? labels.edit_option_title : labels.add_option_title} />
+          </form>
+        </FormProvider>
       </AddOptionComponent>
     </>
   )

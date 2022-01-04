@@ -5,7 +5,7 @@ const LabelComponent = styled.label`
   position: relative;
   font-size: 0.875rem;
   font-weight: bold;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 `
 
 export default LabelComponent

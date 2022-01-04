@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import localForage from 'localforage'
+import { FileWithDirectoryHandle } from 'browser-fs-access'
 import { findByName, getPropertyWithOption } from './collection.utils'
 import { AddCollectionData, AddOptionData, CollectionState, EditOptionData, Property } from './collection.types'
 
@@ -8,7 +9,7 @@ const initialCollectionState: CollectionState = {
   properties: [],
 }
 
-export const addOption = createAsyncThunk('collection/addOptionStatus', async (payload: AddOptionData, thunkAPI) => {
+export const addOption = createAsyncThunk('collection/addOptionStatus', async (payload: AddOptionData) => {
   try {
     const { propertyName, optionName, fileList } = payload ?? {}
     const fileName = `${propertyName}__${optionName}`
@@ -25,7 +26,7 @@ export const addOption = createAsyncThunk('collection/addOptionStatus', async (p
   }
 })
 
-export const editOption = createAsyncThunk('collection/editOptionStatus', async (payload: EditOptionData, thunkAPI) => {
+export const editOption = createAsyncThunk('collection/editOptionStatus', async (payload: EditOptionData) => {
   try {
     const { id, propertyName, optionName, fileList } = payload ?? {}
 
@@ -45,6 +46,30 @@ export const editOption = createAsyncThunk('collection/editOptionStatus', async 
     console.log(e)
   }
 })
+
+export const importCollection = createAsyncThunk(
+  'collection/importCollectionStatus',
+  async (blobs: FileWithDirectoryHandle[], { dispatch }) => {
+    try {
+      const files = blobs.filter((file) => file.type === 'image/png')
+
+      for (const file of files) {
+        const propertyName = file.directoryHandle?.name
+        if (propertyName) {
+          await dispatch(
+            addOption({
+              propertyName,
+              optionName: file.name.replace('.png', ''),
+              fileList: [file],
+            }),
+          )
+        }
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  },
+)
 
 export const collectionSlice = createSlice({
   name: 'collection',

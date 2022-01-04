@@ -2,7 +2,7 @@ export const size = {
   sm: '576px',
   md: '768px',
   lg: '992px',
-  xl: '1200px',
+  xl: '1290px',
 }
 export const device = {
   sm: `(min-width: ${size.sm})`,

@@ -1,17 +1,15 @@
 import { FC, useCallback, useState } from 'react'
 import styled from 'styled-components'
-import mergeImages from 'merge-images'
-import localForage from 'localforage'
+import { directoryOpen } from 'browser-fs-access'
 import Button from '@/components/form/Button'
 import {
   addPreview,
   addPreviewMeta,
   getCollectionName,
-  getCollectionPreview,
-  getCollectionPreviewMeta,
   getIsPropertiesEmpty,
   getProperties,
   getRandomOptionList,
+  importCollection,
 } from '@/state/collection'
 import { useAppDispatch, useAppSelector } from '@/state/hooks'
 import LinkButton from '@/components/form/LinkButton'
@@ -43,15 +41,26 @@ const LeftMenu: FC = () => {
     dispatch(addPreviewMeta(previewMeta))
   }, [properties])
 
+  const importCollectionHandle = useCallback(async () => {
+    const blobs = await directoryOpen({
+      recursive: true,
+    })
+    dispatch(importCollection(blobs))
+  }, [])
+
   return (
     <LeftMenuComponent progress={progress}>
       <LinkButton href="/new_collection">{labels.new_collection_title}</LinkButton>
       <LinkButton disabled={collectionName == null} href="/add_option">
         {labels.add_option_title}
       </LinkButton>
+      <Button disabled={collectionName == null} onClick={importCollectionHandle}>
+        {labels.import_folder_title}
+      </Button>
       <LinkButton disabled={isPropertiesEmpty} href="/export_collection">
         {labels.export_collection_title}
       </LinkButton>
+
       <LinkButton href="/help">{labels.help_title}</LinkButton>
 
       <Preview />
