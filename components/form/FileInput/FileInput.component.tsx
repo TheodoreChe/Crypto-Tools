@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect } from 'react'
-import { DropzoneOptions, useDropzone } from 'react-dropzone'
+import { useDropzone } from 'react-dropzone'
 import LabelComponent from '@/components/form/Label'
 import { useFormContext } from 'react-hook-form'
 import ErrorMessage from '@/components/ErrorMessage'
@@ -21,7 +21,7 @@ const FileComponent = styled.div<{ isDragActive: boolean }>`
   align-items: center;
   justify-content: center;
   &:hover {
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: var(--white);
   }
 `
 

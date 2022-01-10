@@ -9,8 +9,9 @@ import LabelComponent from '@/components/form/Label'
 import Submit from '@/components/form/SubmitButton'
 import Header from '@/components/Header'
 import { useAppDispatch, useAppSelector } from '@/state/hooks'
-import { addOption, editOption, AddOptionData, getCollectionName, getOptionById } from '@/state/collection'
+import { addOption, AddOptionData, editOption, getCollectionName, getOptionById } from '@/state/collection'
 import labels from '@/constants/labels'
+
 type OptionProps = {
   id?: string | undefined
 }

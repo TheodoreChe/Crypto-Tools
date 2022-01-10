@@ -39,7 +39,7 @@ const PropertyList: FC = () => {
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               {properties.map((property, index) => (
-                <PropertyItem key={`PropertyItem-${property.name}`} index={index} property={property} />
+                <PropertyItem key={`PropertyItem-${property.id}`} index={index} property={property} />
               ))}
               {provided.placeholder}
             </div>

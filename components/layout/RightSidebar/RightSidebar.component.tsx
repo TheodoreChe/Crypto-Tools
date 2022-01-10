@@ -1,18 +1,9 @@
 import { FC } from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '@/state/hooks'
-import {
-  deleteOptionByName,
-  deleteProperties,
-  deletePropertyByName,
-  getAmountOfOptions,
-  getCollectionName,
-  getIsPropertiesEmpty,
-  getProperties,
-} from '@/state/collection'
+import { deleteProperties, getAmountOfOptions, getCollectionName, getIsPropertiesEmpty } from '@/state/collection'
 import Header from '@/components/Header'
 import Button from '@/components/form/Button/Button.component'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { actionElement } from '@/constants/styles'
 import PropertyList from './PropertyList.component'
 
@@ -44,7 +35,7 @@ const RightSidebar: FC = () => {
   return (
     <>
       <Header border>
-        <h2>{collectionName ?? 'Collection'}</h2>
+        <h2>{collectionName} Layers</h2>
       </Header>
       <ButtonsWrapper>
         <Button disabled>Undo</Button>
@@ -53,7 +44,7 @@ const RightSidebar: FC = () => {
         </Button>
       </ButtonsWrapper>
       <PropertyList />
-      <CollectionInfo>The size of the collection: {amountOfOptions}</CollectionInfo>
+      <CollectionInfo>It is possible to generate {amountOfOptions} images</CollectionInfo>
     </>
   )
 }

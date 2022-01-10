@@ -20,7 +20,7 @@ const LinkButtonComponent = styled.a<ButtonProps>`
   ${({ active }) =>
     active &&
     css`
-      background-color: #fff;
+      background-color: var(--white);
     `};
 
   ${({ disabled }) =>
@@ -35,7 +35,7 @@ const LinkButtonComponent = styled.a<ButtonProps>`
     css`
       cursor: pointer;
       &:hover {
-        background-color: rgba(255, 255, 255, 0.4);
+        background-color: var(--white);
       }
     `};
 `

@@ -18,7 +18,7 @@ const ButtonComponent = styled.button<{ disabled?: boolean }>`
     css`
       cursor: pointer;
       &:hover {
-        background-color: rgba(255, 255, 255, 0.4);
+        background-color: var(--white);
       }
     `};
 `

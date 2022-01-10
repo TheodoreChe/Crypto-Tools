@@ -1,10 +1,10 @@
 import { FC } from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { Draggable } from 'react-beautiful-dnd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTimesCircle } from '@fortawesome/free-regular-svg-icons'
-import { deleteOptionByName, deletePropertyByName, Property } from '@/state/collection'
+import { deleteOptionById, deletePropertyById, Property } from '@/state/collection'
 import { actionElement } from '@/constants/styles'
 import { useAppDispatch } from '@/state/hooks'
 
@@ -58,12 +58,14 @@ const IconsWrapper = styled.div`
 const PropertyItem: FC<PropertyItemProps> = ({ index, property }) => {
   const dispatch = useAppDispatch()
 
-  const deletePropertyHandle = (payload: { propertyName: string }) => () => {
-    dispatch(deletePropertyByName(payload))
+  const deletePropertyHandle = (id?: string) => () => {
+    if (!id) return
+    dispatch(deletePropertyById({ id }))
   }
 
-  const deleteOptionHandle = (payload: { propertyName: string; optionName: string }) => () => {
-    dispatch(deleteOptionByName(payload))
+  const deleteOptionHandle = (id?: string) => () => {
+    if (!id) return
+    dispatch(deleteOptionById({ id }))
   }
 
   return (
@@ -77,13 +79,18 @@ const PropertyItem: FC<PropertyItemProps> = ({ index, property }) => {
         >
           <Property>
             {property.name}
-            <Icon onClick={deletePropertyHandle({ propertyName: property.name })}>
-              <FontAwesomeIcon icon={faTimesCircle} color="white" />
-            </Icon>
+            <IconsWrapper>
+              <Icon>
+                <FontAwesomeIcon icon={faEdit} />
+              </Icon>
+              <Icon onClick={deletePropertyHandle(property.id)}>
+                <FontAwesomeIcon icon={faTimesCircle} color="white" />
+              </Icon>
+            </IconsWrapper>
           </Property>
 
           {property.options?.map((option) => (
-            <Option key={option.name}>
+            <Option key={`OptionItem-${option.id}`}>
               {option.name}
               <IconsWrapper>
                 <Link href={{ pathname: '/edit_option', query: { id: option.id } }}>
@@ -94,7 +101,7 @@ const PropertyItem: FC<PropertyItemProps> = ({ index, property }) => {
                   </a>
                 </Link>
 
-                <Icon onClick={deleteOptionHandle({ propertyName: property.name, optionName: option.name })}>
+                <Icon onClick={deleteOptionHandle(option.id)}>
                   <FontAwesomeIcon icon={faTimesCircle} />
                 </Icon>
               </IconsWrapper>

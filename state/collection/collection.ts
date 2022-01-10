@@ -16,14 +16,17 @@ const initialCollectionState: CollectionState = {
   properties: [],
 }
 
+const getFileName = (id: string) => `layer__${id}`
+
 export const addOption = createAsyncThunk('collection/addOptionStatus', async (payload: AddOptionData) => {
   try {
     const { propertyName, optionName, fileList } = payload ?? {}
-    const fileName = `${propertyName}__${optionName}`
+    const id = uuidv4()
+    const fileName = getFileName(id)
     await localForage.setItem(fileName, new Blob(fileList, { type: 'image/png' }))
 
     return {
-      id: uuidv4(),
+      id,
       propertyName,
       name: optionName,
       fileName,
@@ -39,7 +42,7 @@ export const editOption = createAsyncThunk('collection/editOptionStatus', async 
 
     let fileName
     if (fileList) {
-      fileName = `${propertyName}__${optionName}`
+      fileName = getFileName(id)
       await localForage.setItem(fileName, new Blob(fileList, { type: 'image/png' }))
     }
 
@@ -47,7 +50,7 @@ export const editOption = createAsyncThunk('collection/editOptionStatus', async 
       id,
       propertyName,
       name: optionName,
-      fileName,
+      ...(fileName ? { fileName } : {}),
     }
   } catch (e) {
     console.log(e)
@@ -107,16 +110,16 @@ export const collectionSlice = createSlice({
       state.properties = []
     },
 
-    deletePropertyByName: (state, { payload }: PayloadAction<{ propertyName: string }>) => {
-      state.properties = state.properties.filter(({ name }) => name !== payload.propertyName)
+    deletePropertyById: (state, { payload }: PayloadAction<{ id: string }>) => {
+      state.properties = state.properties.filter(({ id }) => id !== payload.id)
     },
 
-    deleteOptionByName: (state, { payload }: PayloadAction<{ propertyName: string; optionName: string }>) => {
+    deleteOptionById: (state, { payload }: PayloadAction<{ id: string }>) => {
       state.properties = state.properties.map((property) => {
-        if (property.name === payload.propertyName && property.options) {
+        if (property.options && property.options.find(({ id }) => id === payload.id)) {
           return {
             ...property,
-            options: property.options.filter(({ name }) => name !== payload.optionName),
+            options: property.options.filter(({ id }) => id !== payload.id),
           }
         }
         return property
@@ -175,8 +178,8 @@ export const {
   addPreview,
   addPreviewMeta,
   deleteCollection,
-  deleteOptionByName,
+  deleteOptionById,
   deleteProperties,
-  deletePropertyByName,
+  deletePropertyById,
   reorderProperties,
 } = collectionSlice.actions
