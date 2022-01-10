@@ -14,7 +14,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/state/hooks'
 import LinkButton from '@/components/form/LinkButton'
 import labels from '@/constants/labels'
-import mergeOptions from '../../lib/mergeOptions'
+import mergeOptions from '../../../lib/mergeOptions'
 import Preview from './Preview.component'
 
 const LeftMenuComponent = styled.div<{ progress: boolean }>`
@@ -24,7 +24,7 @@ const LeftMenuComponent = styled.div<{ progress: boolean }>`
   flex-grow: 1;
 `
 
-const LeftMenu: FC = () => {
+const LeftSidebar: FC = () => {
   const [progress, setProgress] = useState<boolean>(false)
   const dispatch = useAppDispatch()
   const properties = useAppSelector(getProperties)
@@ -72,4 +72,4 @@ const LeftMenu: FC = () => {
   )
 }
 
-export default LeftMenu
+export default LeftSidebar
