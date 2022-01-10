@@ -32,6 +32,7 @@ const GridColumn = styled.div<GridColumnProps>`
   flex-grow: 1;
   flex-shrink: 0;
   width: ${({ xs }) => (100 / 12) * Number(xs ?? 12)}%;
+  max-height: 100%;
   ${getWidthByMedia};
 `
 

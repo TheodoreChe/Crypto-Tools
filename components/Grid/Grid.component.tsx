@@ -16,7 +16,7 @@ interface GridInterface extends FC<GridProps> {
 const GridComponent = styled.div`
   display: flex;
   width: 100%;
-  min-height: 100%;
+  height: 100%;
   margin-right: auto;
   margin-left: auto;
 `
