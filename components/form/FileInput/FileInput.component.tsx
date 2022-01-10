@@ -13,7 +13,7 @@ type FileInputProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInpu
 
 const FileComponent = styled.div<{ isDragActive: boolean }>`
   border: ${({ isDragActive }) => (isDragActive ? '2px solid var(--blue)' : '1px dashed var(--black)')};
-  height: 3.75rem;
+  height: 7.5rem;
   margin: 0 0 1rem;
   border-radius: var(--radius);
   cursor: pointer;
