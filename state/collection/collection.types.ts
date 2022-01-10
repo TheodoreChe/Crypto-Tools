@@ -31,3 +31,8 @@ export type EditOptionData = AddOptionData & {
 export type AddCollectionData = {
   collectionName: string
 }
+
+export type ReorderPropertiesData = {
+  startIndex: number
+  endIndex: number
+}

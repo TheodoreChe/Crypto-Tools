@@ -8,8 +8,7 @@ export const findById = (collection: { name: string }[] | undefined, id?: string
 
 export const getPropertyWithOption = (property: Property, newOption: Option) => {
   const isNewOption = !findById(property.options, newOption.id)
-  console.log('isNewOption', isNewOption)
-  console.log('newOption', newOption)
+
   let newOptions: Option[]
   if (isNewOption) {
     newOptions = [...(property.options ?? []), newOption]

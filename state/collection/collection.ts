@@ -3,7 +3,14 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import localForage from 'localforage'
 import { FileWithDirectoryHandle } from 'browser-fs-access'
 import { findByName, getPropertyWithOption } from './collection.utils'
-import { AddCollectionData, AddOptionData, CollectionState, EditOptionData, Property } from './collection.types'
+import {
+  AddCollectionData,
+  AddOptionData,
+  CollectionState,
+  EditOptionData,
+  Property,
+  ReorderPropertiesData,
+} from './collection.types'
 
 const initialCollectionState: CollectionState = {
   properties: [],
@@ -87,6 +94,14 @@ export const collectionSlice = createSlice({
       state.previewMeta = payload
     },
 
+    reorderProperties: (state, { payload }: PayloadAction<ReorderPropertiesData>) => {
+      const properties = Array.from(state.properties)
+      const [removed] = properties.splice(payload.startIndex, 1)
+      properties.splice(payload.endIndex, 0, removed)
+
+      state.properties = properties
+    },
+
     deleteProperties: (state) => {
       localForage.clear()
       state.properties = []
@@ -163,4 +178,5 @@ export const {
   deleteOptionByName,
   deleteProperties,
   deletePropertyByName,
+  reorderProperties,
 } = collectionSlice.actions

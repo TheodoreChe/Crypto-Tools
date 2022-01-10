@@ -45,3 +45,5 @@ export const getIsPropertiesEmpty: Selector<RootState, boolean> = createSelector
   getProperties,
   (properties) => properties.length === 0,
 )
+
+export const getAmountOfOptions: Selector<RootState, number> = createSelector(getOptions, (options) => options.length)
