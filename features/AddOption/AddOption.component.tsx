@@ -1,15 +1,16 @@
 import React, { FC, useCallback, useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import styled, { css } from 'styled-components'
+import { useRouter } from 'next/router'
+import Select from 'react-select'
 import Input from '@/components/form/BaseInput'
 import FileInput from '@/components/form/FileInput'
+import LabelComponent from '@/components/form/Label'
 import Submit from '@/components/form/SubmitButton'
 import Header from '@/components/Header'
 import { useAppDispatch, useAppSelector } from '@/state/hooks'
 import { addOption, editOption, AddOptionData, getCollectionName, getOptionById } from '@/state/collection'
 import labels from '@/constants/labels'
-import { useRouter } from 'next/router'
-
 type OptionProps = {
   id?: string | undefined
 }
@@ -24,6 +25,25 @@ const AddOptionComponent = styled.div<{ disabled?: boolean }>`
       opacity: 0.5;
     `};
 `
+
+const options = [
+  { value: 'common', label: 'Common (as often as possible)' },
+  { value: 'uncommon', label: 'Uncommon (2 times less common)' },
+  { value: 'rare', label: 'Rare (10 times less common)' },
+]
+
+const styles = {
+  control: (styles: any) => ({
+    ...styles,
+    border: '1px solid #000',
+    boxShadow: 'none',
+    cursor: 'pointer',
+    margin: '1.25rem 0 0.75rem',
+    lineHeight: '1.75rem',
+    padding: '.6rem',
+    '&:hover': {},
+  }),
+}
 
 const Option: FC<OptionProps> = ({ id }) => {
   const router = useRouter()
@@ -91,13 +111,17 @@ const Option: FC<OptionProps> = ({ id }) => {
               type="text"
               validations={{ required: 'Please enter option name.' }}
             />
+            <LabelComponent>
+              Rarity
+              <Select defaultValue={options[0]} options={options} styles={styles} />
+            </LabelComponent>
+
             <FileInput
               label="Picture"
               name="fileList"
               validations={{ required: !id && 'Please app picture.' }}
               accept="image/png"
             />
-
             <Submit type="submit" value={Boolean(id) ? labels.edit_option_title : labels.add_option_title} />
           </form>
         </FormProvider>

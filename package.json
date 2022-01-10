@@ -26,6 +26,7 @@
     "react-dropzone": "^11.4.2",
     "react-hook-form": "^7.21.2",
     "react-redux": "^7.2.6",
+    "react-select": "^5.2.1",
     "redux-persist": "^6.0.0",
     "stream": "^0.0.2",
     "styled-components": "^5.3.3",
