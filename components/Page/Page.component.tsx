@@ -1,13 +1,13 @@
 import { FC, ReactNode } from 'react'
 import Head from 'next/head'
-import { DEFAULT_DESCRIPTION, DEFAULT_FOOTER, DEFAULT_TITLE } from './page.constants'
+import styled from 'styled-components'
 import Grid from '@/components/Grid'
 import Header from '@/components/Header'
-import LeftMenu from '@/components/LeftMenu'
-import Structure from '@/components/Structure'
-import styled from 'styled-components'
+import LeftSidebar from '@/components/layout/LeftSidebar'
+import RightSidebar from '@/components/layout/RightSidebar'
 import { useAppSelector } from '@/state/hooks'
 import { getCollectionName } from '@/state/collection'
+import { DEFAULT_DESCRIPTION, DEFAULT_FOOTER, DEFAULT_TITLE } from './page.constants'
 
 type PageProps = {
   children: ReactNode
@@ -42,15 +42,15 @@ const Page: FC<PageProps> = ({
             <Grid.Row>
               <Grid.Column lg={3}>
                 <Header black center border>
-                  <h1>imgMIXER</h1>
+                  <h1>🖼️ GimmeImage</h1>
                 </Header>
-                <LeftMenu />
+                <LeftSidebar />
               </Grid.Column>
               <Grid.Column lg={5} xl={6}>
                 {children}
               </Grid.Column>
               <Grid.Column lg={4} xl={3}>
-                <Structure />
+                <RightSidebar />
               </Grid.Column>
             </Grid.Row>
           </Grid>
