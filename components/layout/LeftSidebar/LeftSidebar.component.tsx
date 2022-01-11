@@ -42,10 +42,16 @@ const LeftSidebar: FC = () => {
   }, [properties])
 
   const importCollectionHandle = useCallback(async () => {
-    const blobs = await directoryOpen({
-      recursive: true,
-    })
-    dispatch(importCollection(blobs))
+    try {
+      const blobs = await directoryOpen({
+        recursive: true,
+      })
+      if (blobs) {
+        dispatch(importCollection(blobs))
+      }
+    } catch (e) {
+      console.error(e)
+    }
   }, [])
 
   return (
