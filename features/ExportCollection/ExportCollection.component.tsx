@@ -57,7 +57,7 @@ const ItemButton = styled.button`
   cursor: pointer;
   padding: 1rem 3.75rem;
   &:hover {
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: var(--white);
   }
 `
 
