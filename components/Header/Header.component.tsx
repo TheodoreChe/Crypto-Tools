@@ -13,6 +13,7 @@ const Header = styled.div<Props>`
   height: 6rem;
   padding: 0 var(--gap);
   border-radius: var(--radius);
+  flex-shrink: 0;
   & > * {
     max-width: 100%;
     overflow: hidden;
