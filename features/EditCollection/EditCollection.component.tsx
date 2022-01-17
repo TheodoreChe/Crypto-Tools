@@ -46,6 +46,7 @@ const AddProperty = styled.div`
 
 const StyledForm = styled.form`
   flex: 1;
+  height: 0;
 `
 
 /**

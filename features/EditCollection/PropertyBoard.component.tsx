@@ -1,12 +1,19 @@
 import React from 'react'
 import styled from 'styled-components'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import { useFormContext, useFieldArray } from 'react-hook-form'
 import { useAppDispatch, useAppSelector } from '@/state/hooks'
 import { getProperties, reorderProperties } from '@/state/collection'
-import { useFormContext, useFieldArray } from 'react-hook-form'
+import DoubleScrollbar from '@/components/DoubleScrollbar'
 import PropertyItem from './PropertyItem.component'
 
-const PropertyBoardComponent = styled.div`
+const PropertyBoardWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`
+
+const PropertyBoardScroll = styled(DoubleScrollbar)`
   display: flex;
   padding: 1rem var(--gap);
   width: 100%;
@@ -36,12 +43,14 @@ function PropertyBoard(): JSX.Element {
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="PropertyBoard" type="COLUMN" direction="horizontal">
         {(provided) => (
-          <PropertyBoardComponent ref={provided.innerRef} {...provided.droppableProps}>
-            {properties.map((property, index) => (
-              <PropertyItem key={`PropertyItem-${property.id}`} property={property} index={index} />
-            ))}
-            {provided.placeholder}
-          </PropertyBoardComponent>
+          <PropertyBoardWrapper ref={provided.innerRef} {...provided.droppableProps}>
+            <PropertyBoardScroll>
+              {properties.map((property, index) => (
+                <PropertyItem key={`PropertyItem-${property.id}`} property={property} index={index} />
+              ))}
+              {provided.placeholder}
+            </PropertyBoardScroll>
+          </PropertyBoardWrapper>
         )}
       </Droppable>
     </DragDropContext>
