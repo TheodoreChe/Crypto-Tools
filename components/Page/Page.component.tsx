@@ -2,10 +2,9 @@ import { FC, ReactNode } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import styled from 'styled-components'
-import Grid from '@/components/Grid'
+import ReactTooltip from 'react-tooltip'
 import Header from '@/components/Header'
 import LeftSidebar from '@/components/layout/LeftSidebar'
-import RightSidebar from '@/components/layout/RightSidebar'
 import { DEFAULT_DESCRIPTION, DEFAULT_FOOTER, DEFAULT_TITLE } from './page.constants'
 
 type PageProps = {
@@ -15,16 +14,30 @@ type PageProps = {
   footer?: string
 }
 
-const Container = styled.div`
+const PageComponent = styled.div`
   height: 100vh;
   width: 100vw;
   padding: var(--gap);
-  max-width: 1400px;
   margin: 0 auto;
+  display: flex;
 `
 
-const StyledColumn = styled(Grid.Column)`
-  background: var(--white);
+const PageColumnComponent = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+`
+
+const PageSidebarComponent = styled(PageColumnComponent)`
+  width: 20rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+`
+
+const PageContentComponent = styled(PageColumnComponent)`
+  flex-grow: 1;
+  flex-shrink: 1;
+  width: 0;
 `
 
 const LogoTitle = styled.h1`
@@ -44,25 +57,16 @@ const Page: FC<PageProps> = ({
         <meta name="description" content={description} />
       </Head>
       <main>
-        <Container>
-          <Grid>
-            <Grid.Row>
-              <Grid.Column lg={3}>
-                <Header black center border>
-                  <Image src="/logo.png" width="33px" height="33px" />
-                  <LogoTitle>GimmeImage</LogoTitle>
-                </Header>
-                <LeftSidebar />
-              </Grid.Column>
-              <Grid.Column lg={5} xl={6}>
-                {children}
-              </Grid.Column>
-              <StyledColumn lg={4} xl={3}>
-                <RightSidebar />
-              </StyledColumn>
-            </Grid.Row>
-          </Grid>
-        </Container>
+        <PageComponent>
+          <PageSidebarComponent>
+            <Header black center border>
+              <Image src="/logo.png" width="33px" height="33px" />
+              <LogoTitle>GimmeImage</LogoTitle>
+            </Header>
+            <LeftSidebar />
+          </PageSidebarComponent>
+          <PageContentComponent>{children}</PageContentComponent>
+        </PageComponent>
       </main>
     </>
   )
