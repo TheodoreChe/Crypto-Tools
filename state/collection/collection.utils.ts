@@ -51,3 +51,12 @@ export const getRandomOptionList = (properties: Property[] = []) =>
       return property.options[randomIndex]
     })
     .filter(Boolean) as Option[]
+
+/**
+ * createName - generate unique  name
+ */
+export function createName(collection: { name: string }[], extra = 0): string {
+  const name = 'Untitled' + (extra ? ` ${extra}` : '')
+  const isUnique = !collection.find((item: Property | Option) => item.name === name)
+  return isUnique ? name : createName(collection, extra + 1)
+}

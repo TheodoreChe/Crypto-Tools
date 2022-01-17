@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import localForage from 'localforage'
 import { FileWithDirectoryHandle } from 'browser-fs-access'
-import { findByName, getPropertyWithOption } from './collection.utils'
+import { createName, findByName, getPropertyWithOption } from './collection.utils'
 import {
   AddCollectionData,
   AddOptionData,
@@ -13,23 +13,34 @@ import {
 } from './collection.types'
 
 const initialCollectionState: CollectionState = {
-  properties: [],
+  properties: [
+    {
+      id: uuidv4(),
+      name: 'Background',
+      rarity: '100',
+      options: [],
+    },
+  ],
 }
 
 const getFileName = (id: string) => `layer__${id}`
 
 export const addOption = createAsyncThunk('collection/addOptionStatus', async (payload: AddOptionData) => {
   try {
-    const { propertyName, optionName, fileList } = payload ?? {}
+    const { propertyName, optionName, fileList, rarity = '100' } = payload ?? {}
     const id = uuidv4()
-    const fileName = getFileName(id)
-    await localForage.setItem(fileName, new Blob(fileList, { type: 'image/png' }))
+    let fileName
+    if (fileList && fileList.length > 0) {
+      fileName = getFileName(id)
+      await localForage.setItem(fileName, new Blob(fileList, { type: 'image/png' }))
+    }
 
     return {
       id,
       propertyName,
       name: optionName,
       fileName,
+      rarity,
     }
   } catch (e) {
     console.log(e)
@@ -38,7 +49,7 @@ export const addOption = createAsyncThunk('collection/addOptionStatus', async (p
 
 export const editOption = createAsyncThunk('collection/editOptionStatus', async (payload: EditOptionData) => {
   try {
-    const { id, propertyName, optionName, fileList } = payload ?? {}
+    const { id, propertyName, optionName, fileList, rarity = '100' } = payload ?? {}
 
     let fileName
     if (fileList) {
@@ -50,6 +61,7 @@ export const editOption = createAsyncThunk('collection/editOptionStatus', async 
       id,
       propertyName,
       name: optionName,
+      rarity,
       ...(fileName ? { fileName } : {}),
     }
   } catch (e) {
@@ -97,6 +109,19 @@ export const collectionSlice = createSlice({
       state.previewMeta = payload
     },
 
+    addUntitledProperty: (state) => {
+      state.properties.push({
+        id: uuidv4(),
+        name: createName(state.properties),
+        rarity: '100',
+        options: [],
+      })
+    },
+
+    setProperties: (state, { payload }: PayloadAction<Property[]>) => {
+      state.properties = payload
+    },
+
     reorderProperties: (state, { payload }: PayloadAction<ReorderPropertiesData>) => {
       const properties = Array.from(state.properties)
       const [removed] = properties.splice(payload.startIndex, 1)
@@ -130,6 +155,10 @@ export const collectionSlice = createSlice({
       localForage.clear()
       return initialCollectionState
     },
+
+    setModalId: (state, { payload }: PayloadAction<string | undefined>) => {
+      state.modalId = payload
+    },
   },
 
   extraReducers: (builder) => {
@@ -145,7 +174,10 @@ export const collectionSlice = createSlice({
         let newProperties: Property[]
 
         if (isNewProperty) {
-          newProperties = [...properties, getPropertyWithOption({ id: uuidv4(), name: payload.propertyName }, payload)]
+          newProperties = [
+            ...properties,
+            getPropertyWithOption({ id: uuidv4(), name: payload.propertyName, rarity: '100' }, payload),
+          ]
         } else {
           newProperties = properties.map((property) => {
             if (property.name === payload.propertyName) {
@@ -177,9 +209,12 @@ export const {
   addCollection,
   addPreview,
   addPreviewMeta,
+  addUntitledProperty,
   deleteCollection,
   deleteOptionById,
   deleteProperties,
   deletePropertyById,
   reorderProperties,
+  setModalId,
+  setProperties,
 } = collectionSlice.actions
