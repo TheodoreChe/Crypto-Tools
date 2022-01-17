@@ -17,15 +17,13 @@ import labels from '@/constants/labels'
 import mergeOptions from '../../../lib/mergeOptions'
 import Preview from './Preview.component'
 
-const LeftMenuComponent = styled.div<{ progress: boolean }>`
-  opacity: ${({ progress }) => (progress ? '0' : '1')};
+const LeftMenuComponent = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 `
 
 const LeftSidebar: FC = () => {
-  const [progress, setProgress] = useState<boolean>(false)
   const dispatch = useAppDispatch()
   const properties = useAppSelector(getProperties)
   const isPropertiesEmpty = useAppSelector(getIsPropertiesEmpty)
@@ -55,11 +53,12 @@ const LeftSidebar: FC = () => {
   }, [])
 
   return (
-    <LeftMenuComponent progress={progress}>
+    <LeftMenuComponent>
       <LinkButton href="/new_collection">{labels.new_collection_title}</LinkButton>
-      <LinkButton disabled={collectionName == null} href="/add_option">
-        {labels.add_option_title}
+      <LinkButton href="/edit_collection" disabled={collectionName == null}>
+        Edit {collectionName}
       </LinkButton>
+
       <Button disabled={collectionName == null} onClick={importCollectionHandle}>
         {labels.import_folder_title}
       </Button>
