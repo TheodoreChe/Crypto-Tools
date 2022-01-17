@@ -85,7 +85,6 @@ const ExportCollection: FC = () => {
     })
 
     zip.generateAsync({ type: 'blob' }).then(function (content) {
-      // see FileSaver.js
       saveAs(content, `${collectionName}.zip`)
     })
 

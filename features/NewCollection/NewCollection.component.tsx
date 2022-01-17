@@ -16,10 +16,8 @@ const NewCollectionComponent = styled.div`
 
 const ButtonsComponent = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   > * {
-    width: calc(50% - 0.5rem);
+    margin-right: var(--gap);
   }
 `
 
@@ -43,7 +41,7 @@ const NewCollection = () => {
 
   const onSubmit = (data: AddCollectionData) => {
     if (data.collectionName != '') {
-      router.push('/add_option')
+      router.push('/edit_collection')
       resetForm()
       dispatch(addCollection(data))
     }
@@ -54,7 +52,7 @@ const NewCollection = () => {
   }
 
   const continueHandle = () => {
-    router.push('/add_option')
+    router.push('/edit_collection')
   }
 
   if (collectionName) {

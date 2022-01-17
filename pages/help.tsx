@@ -50,6 +50,10 @@ const HelpContent = styled.div`
   ${HelpItem};
 `
 
+const ImageWrapper = styled.div`
+  max-width: 600px;
+`
+
 const HelpAccordionButton = styled(AccordionItemButton)`
   &[aria-expanded='true'] {
     ${HelpHeader} {
@@ -68,7 +72,9 @@ const items = [
     content: (
       <>
         <p>GimmeImage is an application that helps you generate a collection of images from source *.png layers.</p>
-        <Image src="/about.png" width="1118px" height="603px" />
+        <ImageWrapper>
+          <Image src="/about.png" width="1118px" height="603px" />
+        </ImageWrapper>
       </>
     ),
   },
