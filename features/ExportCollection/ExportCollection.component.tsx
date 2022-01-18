@@ -67,25 +67,37 @@ const ExportCollection: FC = () => {
   const collectionName = useAppSelector(getCollectionName) || 'collection'
   const slicedPropertiesProduct = sliceArrayByChunks(propertiesCartesianProduct)
   const [inProgress, setInProgress] = useState(false)
-  const exportHandle = (product: any) => async () => {
+  const exportHandle = (product: any, productIndex: number) => async () => {
     setInProgress(true)
 
     const zip = new JSZip()
-    const folder = zip.folder(collectionName)
+    const folderName = `${collectionName}__${productIndex}`
+    const folder = zip.folder(folderName)
 
-    const blobList = await Promise.all(
+    const collection: { blob: Blob; attributes: Record<string, any> }[] = await Promise.all(
       product.map(async (options: Option[]) => {
         const base64 = await mergeOptions(options)
-        return await fetch(base64).then((res) => res.blob())
+        const attributes = options.reduce((acc, option) => {
+          const { propertyName, name } = option
+          if (propertyName) {
+            return { ...acc, [propertyName]: name }
+          }
+          return acc
+        }, {})
+        return await fetch(base64).then((res) => ({ blob: res.blob(), attributes }))
       }),
     )
 
-    blobList.map((blob, index) => {
-      folder && folder.file(`${collectionName}__${index}.png`, blob)
+    collection.map(({ blob, attributes }, index) => {
+      if (folder) {
+        const name = `${folderName}__${index}`
+        folder.file(`${name}.png`, blob)
+        folder.file(`${name}.json`, JSON.stringify(attributes))
+      }
     })
 
     zip.generateAsync({ type: 'blob' }).then(function (content) {
-      saveAs(content, `${collectionName}.zip`)
+      saveAs(content, `${folderName}.zip`)
     })
 
     setInProgress(false)
@@ -97,10 +109,10 @@ const ExportCollection: FC = () => {
         <h2>Export Collection</h2>
       </Header>
       <ExportCollectionComponent disabled={inProgress}>
-        {slicedPropertiesProduct.map((product: any, index: number) => (
-          <Item key={index}>
-            <ItemNumber>Part {index + 1}</ItemNumber>
-            <ItemButton onClick={exportHandle(product)}>Export</ItemButton>
+        {slicedPropertiesProduct.map((product: any, productIndex: number) => (
+          <Item key={productIndex}>
+            <ItemNumber>Part {productIndex + 1}</ItemNumber>
+            <ItemButton onClick={exportHandle(product, productIndex)}>Export</ItemButton>
             <ItemDescription>{product.length} items</ItemDescription>
           </Item>
         ))}
