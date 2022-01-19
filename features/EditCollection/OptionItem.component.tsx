@@ -84,7 +84,7 @@ function OptionItem({ option: { id, name, fileName }, fieldName }: OptionItemPro
     <>
       <OptionItemWrapper>
         <OptionInfo>
-          <OptionImage data-tip={!imageSrc && 'Please add image'}>
+          <OptionImage data-tip={imageSrc ? '' : 'Please add image'}>
             {imageSrc && <img src={imageSrc} alt={`${name} preview`} />}
           </OptionImage>
           <div>
